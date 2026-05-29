@@ -9,7 +9,7 @@ export ROOT_BUILD_PATH = build
 #
 # Adjust the YOCTO tool path as required
 #
-export YOCTO_SDK_PATH = /hdb/MediaTek/Pumpkin/RITY-Scarthgap_v25.1_Jailhouse/SDK/v25.1
+export YOCTO_SDK_PATH ?= /path/to/YOCTO/SDK
 
 export SRCS =	\
 	src/main.c	\
