@@ -247,6 +247,7 @@ static void rpmsg_task (void* arg1,
 	size_t                   rpmsg_size;
     uint32_t                 id;
     uint32_t                 max_peers;
+    uintptr_t                vaddr;
     uintptr_t                rpmsg_paddr;
     uintptr_t                rpmsg_vaddr;
 	struct metal_init_params metal_params = METAL_INIT_DEFAULTS;
@@ -303,7 +304,7 @@ static void rpmsg_task (void* arg1,
         target = 0;
     }
 
-	printf (INFO_STR "IVSHMEM      Phy: 0x%016" PRIxPTR "  Virt: 0x%016" PRIxPTR "  Size: 0x%08zu\n",
+	printf (INFO_STR "IVSHMEM      Phy: 0x%016" PRIxPTR "  Virt: 0x%016" PRIxPTR "  Size: 0x%08x\n",
         rpmsg_ctx.ivshmem_paddr, rpmsg_ctx.ivshmem_vaddr, rpmsg_ctx.ivshmem_size);
 	printf (INFO_STR "Id: %d  Target: %d\n", id, target);
 
@@ -363,8 +364,8 @@ static void rpmsg_task (void* arg1,
     
 	printf (INFO_STR "VDEV STATUS  Phy: 0x%016" PRIxPTR "  Virt: 0x%016" PRIxPTR "  Size: 0x%08x\n",
         (rpmsg_paddr - VDEV_STATUS_SIZE), vdev_status_vaddr, VDEV_STATUS_SIZE);
-	printf (INFO_STR "VBUFFER      Phy: 0x%016" PRIxPTR "  Virt: 0x%016" PRIxPTR "  Size: 0x%08zu\n",
-        rpmsg_paddr, rpmsg_vaddr, (rpmsg_size - (2 * VRING_SIZE)));
+	printf (INFO_STR "VBUFFER      Phy: 0x%016" PRIxPTR "  Virt: 0x%016" PRIxPTR "  Size: 0x%08x\n",
+        rpmsg_paddr, rpmsg_vaddr, (unsigned int) (rpmsg_size - (2 * VRING_SIZE)));
 	printf (INFO_STR "VRING [TX]   Phy: 0x%016" PRIxPTR "  Virt: 0x%016" PRIxPTR "  Size: 0x%08x\n",
         (rpmsg_paddr + rpmsg_size - VRING_SIZE), (uintptr_t) vrings [VRING_TX].info.vaddr, VRING_SIZE);
 	printf (INFO_STR "VRING [RX]   Phy: 0x%016" PRIxPTR "  Virt: 0x%016" PRIxPTR "  Size: 0x%08x\n",
@@ -415,7 +416,7 @@ static void rpmsg_task (void* arg1,
 	while (1) {
 		ret = send_message ();
 		if (ret < 0) {
-            printf (ERROR_STR "alarm_nfy  rpmsg_send () failed with: %d\n", ret);
+            printf (ERROR_STR "rpmsg_send () failed with: %d\n", ret);
 
 			return;
 		}

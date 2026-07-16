@@ -4,7 +4,7 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-/* IVSHMEM memory layout:                                   */
+/* IVSHMEM memory layout for OpenAMP                        */
 /*                                                          */
 /*                         +----------------+ <- End of     */
 /*                      ^  |                |    IVSHMEM    */
@@ -39,12 +39,14 @@
 #define VDEV_STATUS_SIZE  0x0400
 
 #define VRING_SIZE        0x0400
-#define VRING_ALIGNMENT    4
+#define VRING_ALIGNMENT   32
 #define VRING_NUM_DESCRS  16
 
 #define VRING_TX           0
 #define VRING_RX           1
 #define VRING_COUNT		   2
+
+#define RPMSG_SERVICE_NAME "rpmsg-raw"
 
 
 #endif /* __COMMON_H__ */

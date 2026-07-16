@@ -26,8 +26,6 @@
 #define ERROR_STR  "[ERROR] "
 #define INFO_STR   "[INFO]  "
 
-#define RPMSG_SERVICE_NAME "rpmsg"
-
 #define MSG_STR_SIZE 64
 
 #define MSG_STR "Hello from Linux!"
@@ -369,7 +367,7 @@ int main (int   argc,
     struct pollfd poll_fd;
 
 
-    printf ("RPMSG-TEST ...\n");
+    printf ("RPMSG-TEST using OpenAMP RPMSG ...\n");
 
 	for (i = 1; i < argc; i++) {
 		if ((strcmp ("-t",       argv [i]) == 0)  ||
@@ -489,7 +487,7 @@ int main (int   argc,
         exit (1);
     }
 
-    /* Use the SIGALRM handl;er to send an RPMSG to the distant side. */
+    /* Use the SIGALRM handler to send an RPMSG to the distant side. */
     signal (SIGALRM, alarm_nfy);
 
 	mmio_write32 (&(regs_vaddr->state), (id + 1));
