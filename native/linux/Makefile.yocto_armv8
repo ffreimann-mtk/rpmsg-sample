@@ -1,0 +1,65 @@
+#
+# Build for the YOCTO (ARMv8) machine.
+#
+TOOL_PATH = $(YOCTO_SDK_PATH)/sysroots/x86_64-pokysdk-linux/usr/bin/aarch64-poky-linux
+
+SYS_ROOT_PATH = $(YOCTO_SDK_PATH)/sysroots/armv8a-poky-linux
+
+CC = $(TOOL_PATH)/aarch64-poky-linux-gcc
+AR = $(TOOL_PATH)/aarch64-poky-linux-ar
+RANLIB = $(TOOL_PATH)/aarch64-poky-linux-ranlib
+STRIP = $(TOOL_PATH)/aarch64-poky-linux-strip
+
+NAME = yocto_armv8
+
+CFLAGS = -march=armv8-a+crc \
+        -fpic \
+        -mbranch-protection=standard \
+        -fstack-protector-strong \
+        -O2 \
+        -D_FORTIFY_SOURCE=2 \
+        -Wformat \
+        -Wformat-security \
+        -Werror=format-security \
+        -DUSE_LOCAL_DYN_MEM_MANAGEMENT \
+        -I./include \
+        -I../../include \
+        --sysroot=$(SYS_ROOT_PATH)
+
+BUILD_PATH = $(ROOT_BUILD_PATH)/$(NAME)
+
+OBJS = $(addprefix $(BUILD_PATH)/,$(addsuffix .o,$(basename $(SRCS))))
+
+
+.PHONY: all preface $(OBJS) exe clean
+
+all: preface $(OBJS) exe
+
+#
+# Build the components
+#
+preface:
+	@echo "**** Building $(BUILD_PATH)/$(PROJ_NAME) ..."
+
+$(OBJS):
+	@if [ -d $(YOCTO_SDK_PATH) ]; then \
+		if [ ! -d $(dir $@) ]; then \
+			mkdir -p $(dir $@); \
+		fi; \
+		echo "Building $@ ..."; \
+		$(CC) $(CFLAGS) -c -o $@ $(addsuffix .c,$(basename $(subst $(BUILD_PATH)/,,$@))); \
+	fi
+
+exe:
+	@if [ -d $(YOCTO_SDK_PATH) ]; then \
+		echo "Building $(BUILD_PATH)/$(PROJ_NAME) ..."; \
+		$(CC) $(CFLAGS) -o $(BUILD_PATH)/$(PROJ_NAME) $(OBJS); \
+		echo "**** Done ..."; \
+	else \
+		echo "**** Skip building $(NAME) because of invalid YOCTO_SDK_PATH setting ..."; \
+	fi
+	
+
+clean:
+	@rm -f $(OBJS)
+	@rm -f $(BUILD_PATH)/$(PROJ_NAME)_$(NAME)
