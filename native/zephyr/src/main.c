@@ -200,9 +200,6 @@ static void vdev_set_status (struct virtio_device* vdev,
                              unsigned char         status)
 {
     printf (INFO_STR "vdev_set_status  status: 0x%02x\n", status);
-#if 0
-    *((volatile uint8_t*) vdev_status_vaddr) = status;
-#endif
 }
 
 static uint32_t vdev_get_features (struct virtio_device* vdev)
@@ -278,10 +275,7 @@ static metal_phys_addr_t* io_offset_to_phys (struct metal_io_region* io,
                                              unsigned long           offset)
 {
     metal_phys_addr_t* paddr = (metal_phys_addr_t*) (offset + ((unsigned long) io->physmap [0]));
-#if 0
-    printf (INFO_STR "io_offset_to_phys  offset: 0x%08llx  paddr: 0x%016llx\n",
-        offset, (uintptr_t) paddr);
-#endif
+
     return (paddr);
 }                                      
 
@@ -289,10 +283,7 @@ static unsigned long* io_phys_to_offset (struct metal_io_region* io,
                                          metal_phys_addr_t       phys)
 {
     unsigned long offset = (((unsigned long) phys) - ((unsigned long) io->physmap [0]));
-#if 0
-    printf (INFO_STR "io_phys_to_offset  paddr:   0x%016llx  offset: 0x%08llx\n",
-        (unsigned long) phys, offset);
-#endif
+
     return ((unsigned long) phys);
 }                                         
 
